@@ -31,4 +31,4 @@ Particularidades:
 - `audio.volume` es de solo lectura en iOS: el slider solo se muestra si el navegador respeta el cambio. Hay integración con Media Session (pantalla de bloqueo).
 - El alias `@/*` apunta a `./src/*` (`jsconfig.json`).
 - `next.config.mjs` está vacío (sin dominios de imagen remotos); las imágenes son locales en `public/`.
-- `npm run lint` (`next lint`) falla con "Cannot serialize key "parse" in parser" por la config flat de ESLint; no es por el código. Usar `npx eslint src`.
+- Vercel bloquea el deploy si `next` tiene una versión con vulnerabilidades críticas (`npm audit`). Mantener `next` en un parche vigente de la línea 15.

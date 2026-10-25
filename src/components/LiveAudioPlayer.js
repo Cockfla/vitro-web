@@ -4,9 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { FaPause, FaPlay, FaSpinner, FaVolumeUp } from "react-icons/fa";
 
-// Stream Shoutcast v1 (responde "ICY 200 OK", ignora Range). El parámetro `t`
-// evita que iOS/Safari reutilice una respuesta vieja al reconectar.
-const STREAM_URL = "https://servers58.com/proxy/sc_elvitrola?mp=/;";
+// El stream original es Shoutcast v1 ("ICY 200 OK"), que Safari iOS no
+// reproduce directo. /api/radio (ver app/api/radio/route.js) lo reexpone como
+// HTTP normal. El parámetro `t` fuerza una conexión nueva en cada reconexión.
+const STREAM_URL = "/api/radio";
+// Vercel corta la función del proxy cada cierto tiempo: se reconecta solo.
+const MAX_RETRIES = 5;
 
 const BARS = [
   { delay: "0s", duration: "0.9s" },
@@ -36,26 +39,52 @@ export default function LiveAudioPlayer() {
   // Es una radio en vivo: al detener se suelta la conexión, y al volver a
   // reproducir se abre una nueva. Reanudar una conexión pausada deja el audio
   // viejo y en iOS suele no reanudar nunca.
+  const retriesRef = useRef(0);
+  const retryTimerRef = useRef(null);
+
   const stop = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
+    clearTimeout(retryTimerRef.current);
+    retriesRef.current = 0;
     audio.pause();
     audio.removeAttribute("src");
     audio.load();
     setStatus("idle");
   }, []);
 
-  // play() debe ejecutarse de forma síncrona dentro del gesto del usuario
-  // (tap), si no iOS lo bloquea.
-  const start = useCallback(() => {
+  const openStream = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    setStatus("loading");
-    audio.src = `${STREAM_URL}&t=${Date.now()}`;
+    audio.src = `${STREAM_URL}?t=${Date.now()}`;
     audio.play().catch((err) => {
       if (err?.name !== "AbortError") setStatus("error");
     });
   }, []);
+
+  // play() debe ejecutarse de forma síncrona dentro del gesto del usuario
+  // (tap), si no iOS lo bloquea.
+  const start = useCallback(() => {
+    clearTimeout(retryTimerRef.current);
+    retriesRef.current = 0;
+    setStatus("loading");
+    openStream();
+  }, [openStream]);
+
+  // Corte del stream sin que la persona haya detenido la reproducción.
+  const reconnect = useCallback(
+    (delay) => {
+      if (retriesRef.current >= MAX_RETRIES) {
+        setStatus("error");
+        return;
+      }
+      retriesRef.current += 1;
+      setStatus("loading");
+      clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = setTimeout(openStream, delay);
+    },
+    [openStream]
+  );
 
   const toggle = () => {
     if (status === "idle" || status === "error") start();
@@ -114,17 +143,26 @@ export default function LiveAudioPlayer() {
         ref={audioRef}
         preload="none"
         playsInline
-        onPlaying={() => setStatus("playing")}
+        onPlaying={() => {
+          retriesRef.current = 0;
+          setStatus("playing");
+        }}
         onWaiting={() => setStatus((s) => (s === "playing" ? "loading" : s))}
         onPause={() => {
+          const audio = audioRef.current;
+          // Al terminar el stream el navegador dispara `pause` antes de
+          // `ended`: eso lo maneja onEnded (reconexión), no es una pausa.
+          if (!audio || audio.ended) return;
           // Pausa externa (auriculares, llamada, pantalla de bloqueo): se
           // cierra la conexión para que el próximo play vuelva en vivo.
-          if (audioRef.current?.getAttribute("src")) stop();
+          if (audio.getAttribute("src")) stop();
         }}
         onError={() => {
-          if (audioRef.current?.getAttribute("src")) setStatus("error");
+          if (audioRef.current?.getAttribute("src")) reconnect(1000);
         }}
-        onEnded={() => setStatus("error")}
+        onEnded={() => {
+          if (audioRef.current?.getAttribute("src")) reconnect(0);
+        }}
       />
 
       <p

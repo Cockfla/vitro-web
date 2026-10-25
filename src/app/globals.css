@@ -2,34 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: linear-gradient(120deg, #fab043, white);
-  --foreground: #fab043;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: linear-gradient(120deg, #fab043, #020202);
-    --foreground: #fab043;
-  }
+html {
+  background: #0a0a0a;
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
   min-height: 100vh;
-  background-size: 400% 400%;
-  background-attachment: fixed; /* Fija el fondo en toda la pantalla */
-  animation: gradientAnimation 10s infinite linear alternate;
-}
-
-/* Animación del fondo */
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 100% 50%;
-  }
+  min-height: 100dvh;
+  color: #fff;
+  background: #0a0a0a;
+  -webkit-tap-highlight-color: transparent;
 }

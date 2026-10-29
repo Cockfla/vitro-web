@@ -148,12 +148,19 @@ export default function Home() {
                   Gente Comunicaciones
                 </span>
               </a>
-              <div className="rounded-2xl border border-vitro/40 bg-vitro/10 p-4">
+              <a
+                href="https://radioimpactoderengo.cl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`group rounded-2xl border border-vitro/40 bg-vitro/10 p-4 transition hover:bg-vitro/20 ${linkRing}`}
+              >
                 <span className="block text-2xl font-extrabold text-vitro">
                   107.3 FM
                 </span>
-                <span className="text-sm font-semibold">Radio Impacto</span>
-              </div>
+                <span className="text-sm font-semibold underline-offset-4 group-hover:underline">
+                  Radio Impacto
+                </span>
+              </a>
             </div>
           </div>
 

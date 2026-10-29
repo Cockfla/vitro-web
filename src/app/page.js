@@ -1,4 +1,5 @@
 import Image from "next/image";
+import CurrentYear from "@/components/CurrentYear";
 import LiveAudioPlayer from "@/components/LiveAudioPlayer";
 import {
   FaClock,
@@ -194,7 +195,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-2 text-center text-xs text-white/60 lg:col-span-2">
-          © 2025 El Vitrola de Chile. Todos los derechos reservados. Powered by{" "}
+          © <CurrentYear initial={new Date().getFullYear()} /> El Vitrola de Chile. Todos los derechos reservados. Powered by{" "}
           <a
             href="https://www.felpysoluciones.com/"
             target="_blank"

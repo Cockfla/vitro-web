@@ -1,7 +1,4 @@
-// Dominio público del sitio: NEXT_PUBLIC_SITE_URL, o el dominio de producción
-// que Vercel expone, o localhost en desarrollo.
-export const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000");
+// Dominio público del sitio, definido en NEXT_PUBLIC_SITE_URL en el momento del
+// build (p. ej. https://vitrola.cl). Sin él no se generan canonical ni sitemap
+// con un dominio inventado.
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "").replace(/\/+$/, "");

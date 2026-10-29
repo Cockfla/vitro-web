@@ -8,7 +8,7 @@ import { FaPause, FaPlay, FaSpinner, FaVolumeUp } from "react-icons/fa";
 // reproduce directo. /api/radio (ver app/api/radio/route.js) lo reexpone como
 // HTTP normal. El parámetro `t` fuerza una conexión nueva en cada reconexión.
 const STREAM_URL = "/api/radio";
-// Vercel corta la función del proxy cada cierto tiempo: se reconecta solo.
+// El proxy puede cortarse cada cierto tiempo: se reconecta solo.
 const MAX_RETRIES = 5;
 
 const BARS = [

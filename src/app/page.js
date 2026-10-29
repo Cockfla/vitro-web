@@ -40,9 +40,24 @@ const socials = [
 const linkRing =
   "outline-none focus-visible:ring-2 focus-visible:ring-vitro focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "RadioStation",
+  name: "El Vitrola de Chile",
+  description:
+    "Locutor y radio en vivo 24/7 de música ranchera en la Región de O’Higgins, Chile.",
+  inLanguage: "es-CL",
+  areaServed: "Región de O’Higgins, Chile",
+  sameAs: socials.filter((s) => s.href.startsWith("https://")).map((s) => s.href),
+};
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       {/* Fondo fijo: resplandor naranja sobre negro (sin background-attachment,
           que iOS Safari no soporta bien) */}
       <div

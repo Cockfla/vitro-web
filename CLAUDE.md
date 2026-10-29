@@ -12,8 +12,9 @@ Package manager: **npm** (hay `package-lock.json`).
 
 - `npm run dev` — servidor de desarrollo con Turbopack (http://localhost:3000). `/api/radio` responde 501 aquí (necesita `cloudflare:sockets`).
 - `npm run preview` — build con OpenNext y servidor local en el runtime real de Workers (`wrangler dev`); aquí sí funciona `/api/radio`.
-- `npm run deploy` — build + deploy a Cloudflare Workers (Workers Builds: build `npm run build`... ver README)
-- `npm run build` / `npm start` — build y servidor de producción
+- `npm run build` — build de OpenNext para Cloudflare (genera `.open-next/`, que usa `wrangler deploy`); internamente llama a `next build` (ver `open-next.config.ts`). `npm run build:next` hace solo `next build`.
+- `npm run deploy` — build + deploy a Cloudflare Workers (ver README)
+- `npm start` — `next start` (solo sirve para depurar, no usa el runtime de Workers)
 - `npm run lint` — `next lint` (config flat en `eslint.config.mjs`, extiende `next/core-web-vitals`)
 
 No hay framework de tests configurado, así que no existe `npm test`.

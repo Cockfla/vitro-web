@@ -1,3 +1,9 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 
-export default defineCloudflareConfig();
+// `npm run build` ejecuta el build de OpenNext (que es lo que necesita
+// `wrangler deploy`), así que OpenNext debe llamar a `next build` directamente
+// y no volver a `npm run build`.
+export default {
+  ...defineCloudflareConfig(),
+  buildCommand: "npx next build",
+};

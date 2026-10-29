@@ -30,7 +30,7 @@ const unavailable = () => new Response("Señal no disponible", { status: 502 });
 export async function GET() {
   let sockets;
   try {
-    sockets = await import("cloudflare:sockets");
+    sockets = await import(/* webpackIgnore: true */ "cloudflare:sockets");
   } catch {
     return new Response("Solo disponible en el runtime de Cloudflare", { status: 501 });
   }

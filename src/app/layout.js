@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
+import { siteUrl } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,10 +12,53 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const title = "El Vitrola de Chile | Radio en vivo 24/7 desde la Región de O’Higgins";
+const description =
+  "Escucha en vivo a El Vitrola de Chile, el locutor número uno de la Región de O’Higgins: música ranchera y eventos rancheros las 24 horas, por 94.5 FM y 107.3 FM.";
+
 export const metadata = {
-  title: "El Vitrola de Chile Web",
-  description: "El Locutor Número Uno de la Región de O'higgins",
-  keywords: "radio, ranchera, chile, o'higgins, vitrola",
+  ...(siteUrl && { metadataBase: new URL(siteUrl) }),
+  title: { default: title, template: "%s | El Vitrola de Chile" },
+  description,
+  keywords: [
+    "radio en vivo",
+    "música ranchera",
+    "El Vitrola de Chile",
+    "radio Chile",
+    "Región de O'Higgins",
+    "94.5 FM",
+    "107.3 FM",
+    "Gente Comunicaciones",
+    "Radio Impacto",
+  ],
+  ...(siteUrl && { alternates: { canonical: "/" } }),
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_CL",
+    siteName: "El Vitrola de Chile",
+    url: "/",
+    title,
+    description,
+    images: [
+      {
+        url: "/logo-vitro.png",
+        width: 907,
+        height: 567,
+        alt: "El Vitrola de Chile",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/logo-vitro.png"],
+  },
 };
 
 export const viewport = {
@@ -32,7 +75,6 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         {children}
-        <Analytics />
       </body>
     </html>
   );

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import CurrentYear from "@/components/CurrentYear";
 import LiveAudioPlayer from "@/components/LiveAudioPlayer";
 import {
   FaClock,
@@ -40,12 +41,24 @@ const socials = [
 const linkRing =
   "outline-none focus-visible:ring-2 focus-visible:ring-vitro focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
-// Regenera la página cada día para que el año del footer siempre sea el actual
-export const revalidate = 86400;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "RadioStation",
+  name: "El Vitrola de Chile",
+  description:
+    "Locutor y radio en vivo 24/7 de música ranchera en la Región de O’Higgins, Chile.",
+  inLanguage: "es-CL",
+  areaServed: "Región de O’Higgins, Chile",
+  sameAs: socials.filter((s) => s.href.startsWith("https://")).map((s) => s.href),
+};
 
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       {/* Fondo fijo: resplandor naranja sobre negro (sin background-attachment,
           que iOS Safari no soporta bien) */}
       <div
@@ -135,12 +148,19 @@ export default function Home() {
                   Gente Comunicaciones
                 </span>
               </a>
-              <div className="rounded-2xl border border-vitro/40 bg-vitro/10 p-4">
+              <a
+                href="https://radioimpactoderengo.cl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`group rounded-2xl border border-vitro/40 bg-vitro/10 p-4 transition hover:bg-vitro/20 ${linkRing}`}
+              >
                 <span className="block text-2xl font-extrabold text-vitro">
                   107.3 FM
                 </span>
-                <span className="text-sm font-semibold">Radio Impacto</span>
-              </div>
+                <span className="text-sm font-semibold underline-offset-4 group-hover:underline">
+                  Radio Impacto
+                </span>
+              </a>
             </div>
           </div>
 
@@ -182,7 +202,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-2 text-center text-xs text-white/60 lg:col-span-2">
-          © {new Date().getFullYear()} El Vitrola de Chile. Todos los derechos reservados. Powered by{" "}
+          © <CurrentYear initial={new Date().getFullYear()} /> El Vitrola de Chile. Todos los derechos reservados. Powered by{" "}
           <a
             href="https://www.felpysoluciones.com/"
             target="_blank"

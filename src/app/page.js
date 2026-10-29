@@ -40,6 +40,9 @@ const socials = [
 const linkRing =
   "outline-none focus-visible:ring-2 focus-visible:ring-vitro focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
+// Regenera la página cada día para que el año del footer siempre sea el actual
+export const revalidate = 86400;
+
 export default function Home() {
   return (
     <>
@@ -179,7 +182,7 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="mt-2 text-center text-xs text-white/60 lg:col-span-2">
-          © 2025 El Vitrola de Chile. Todos los derechos reservados. Powered by{" "}
+          © {new Date().getFullYear()} El Vitrola de Chile. Todos los derechos reservados. Powered by{" "}
           <a
             href="https://www.felpysoluciones.com/"
             target="_blank"

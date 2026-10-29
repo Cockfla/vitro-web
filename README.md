@@ -35,7 +35,7 @@ Next.js corre en Workers con [`@opennextjs/cloudflare`](https://opennext.js.org/
 
 En **Workers Builds** (Settings → Build) usar:
 
-- Build command: `npm run build:cf`
+- Build command: `npm run build` (ejecuta el build de OpenNext; es el valor por defecto)
 - Deploy command: `npx wrangler deploy`
 
 Variable de build (Settings → Variables and Secrets → *Build*): `NEXT_PUBLIC_SITE_URL` con el dominio público (p. ej. `https://tudominio.cl`), usada para canonical, Open Graph y sitemap.

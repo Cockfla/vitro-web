@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
 import { siteUrl } from "@/lib/site";
 
 const geistSans = Geist({
@@ -18,7 +17,7 @@ const description =
   "Escucha en vivo a El Vitrola de Chile, el locutor número uno de la Región de O’Higgins: música ranchera y eventos rancheros las 24 horas, por 94.5 FM y 107.3 FM.";
 
 export const metadata = {
-  metadataBase: new URL(siteUrl),
+  ...(siteUrl && { metadataBase: new URL(siteUrl) }),
   title: { default: title, template: "%s | El Vitrola de Chile" },
   description,
   keywords: [
@@ -32,7 +31,7 @@ export const metadata = {
     "Gente Comunicaciones",
     "Radio Impacto",
   ],
-  alternates: { canonical: "/" },
+  ...(siteUrl && { alternates: { canonical: "/" } }),
   robots: {
     index: true,
     follow: true,
@@ -76,7 +75,6 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         {children}
-        <Analytics />
       </body>
     </html>
   );
